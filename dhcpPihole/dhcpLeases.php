@@ -43,6 +43,13 @@ if(!array_key_exists("htmltable",$_GET) && !array_key_exists("htmltable",$_SERVE
 		color: white;
 	}
 
+	#date {
+		font-family: monospace;
+		border-collapse: collapse;
+		border: 0px;
+		padding: 0 5px;
+	}
+
 	</style>
 	</head>
 	<body>
@@ -61,7 +68,7 @@ if(!array_key_exists("htmltable",$_GET) && !array_key_exists("htmltable",$_SERVE
 		array_push($leases,explode(" ",$line));
 		$leases[sizeof($leases)-1][0]=date($dateFormat, $leases[sizeof($leases)-1][0]);
 	}
-	print("<table id='dhcp'><tr><td>");
+	print("<table id='date'><tr><td>");
 	print date($dateFormat);
 	print("</td></tr></table><br>\n");
 	print("<table id='dhcp'>\n");
