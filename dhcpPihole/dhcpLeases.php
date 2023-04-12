@@ -1,3 +1,4 @@
+<!-- https://github.com/tbblake/myScripts/tree/main/dhcpPihole -->
 <?php
 if(!array_key_exists("htmltable",$_GET) && !array_key_exists("htmltable",$_SERVER)) {
 	?>

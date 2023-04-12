@@ -1,3 +1,4 @@
+<!-- https://github.com/tbblake/myScripts/tree/main/dhcpPihole -->
 # dhcpPihole
 Displays your pihole dhcp lease table in an easy to read format.  To install, copy dhcpLeases.php to /var/www/html, 10-accesslog-dhcpLeases.conf to /etc/lighttpd/conf-enabled, then restart lighttpd.
 
