@@ -51,16 +51,17 @@ if(!array_key_exists("htmltable",$_GET) && !array_key_exists("htmltable",$_SERVE
 	<?php
 } else {
 	$file="/etc/pihole/dhcp.leases";
+	$dateformat="m/d/Y h:i:sa T";
 	$data=file($file);
 	natsort($data);
 	$data=array_reverse($data,false);
 	$leases=[];
 	foreach ($data as $line) {
 		array_push($leases,explode(" ",$line));
-		$leases[sizeof($leases)-1][0]=date("m/d/y h:i:sA", $leases[sizeof($leases)-1][0]);
+		$leases[sizeof($leases)-1][0]=date($dateformat, $leases[sizeof($leases)-1][0]);
 	}
 	print("<table id='dhcp'><tr><td>");
-	print date('h:i:s A');
+	print date($dateformat);
 	print "\n";
 	print("</td></tr></table><br>\n");
 	print("<table id='dhcp'>\n");
