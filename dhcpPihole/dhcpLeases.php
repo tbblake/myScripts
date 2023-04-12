@@ -60,7 +60,8 @@ if(!array_key_exists("htmltable",$_GET) && !array_key_exists("htmltable",$_SERVE
 	<?php
 } else {
 	$file="/etc/pihole/dhcp.leases";
-	$dateFormat="m/d/Y h:i:sa T";
+	# $dateFormat="m/d/Y h:i:sa T";
+	$dateFormat="m/d/Y h:i:sa";
 	$data=file($file);
 	natsort($data);
 	$data=array_reverse($data,false);
