@@ -1,6 +1,7 @@
 <?php
 if(!array_key_exists("htmltable",$_GET) && !array_key_exists("htmltable",$_SERVER)) {
 	?>
+	<!doctype html>
 	<html>
 	<head>
 	<title>Lease Status</title>
@@ -29,7 +30,7 @@ if(!array_key_exists("htmltable",$_GET) && !array_key_exists("htmltable",$_SERVE
 
 	#dhcp td, #dhcp th {
 		border: 0px;
-		padding: 0 5;
+		padding: 0 5px;
 	}
 
 	#dhcp tr:nth-child(even){background-color: #f2f2f2;}
