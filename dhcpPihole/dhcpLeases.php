@@ -51,28 +51,27 @@ if(!array_key_exists("htmltable",$_GET) && !array_key_exists("htmltable",$_SERVE
 	<?php
 } else {
 	$file="/etc/pihole/dhcp.leases";
-	$dateformat="m/d/Y h:i:sa T";
+	$dateFormat="m/d/Y h:i:sa T";
 	$data=file($file);
 	natsort($data);
 	$data=array_reverse($data,false);
 	$leases=[];
 	foreach ($data as $line) {
 		array_push($leases,explode(" ",$line));
-		$leases[sizeof($leases)-1][0]=date($dateformat, $leases[sizeof($leases)-1][0]);
+		$leases[sizeof($leases)-1][0]=date($dateFormat, $leases[sizeof($leases)-1][0]);
 	}
 	print("<table id='dhcp'><tr><td>");
-	print date($dateformat);
-	print "\n";
+	print date($dateFormat);
 	print("</td></tr></table><br>\n");
 	print("<table id='dhcp'>\n");
-	print("<TR><TH>Expires</TH><TH>MAC</TH><TH>IP</TH><TH>Name</TH></TR>\n");
+	print("<tr><th>Expires</th><th>MAC</th><th>IP</th><th>Name</th></tr>\n");
 	foreach ($leases as $lease) {
-		print("<TR>");
-		print("<TD>".$lease[0]."</TD>");
-		print("<TD>".$lease[1]."</TD>");
-		print("<TD>".$lease[2]."</TD>");
-		print("<TD>".$lease[3]."</TD>");
-		print("</TR>\n");
+		print("<tr>");
+		print("<td>".$lease[0]."</td>");
+		print("<td>".$lease[1]."</td>");
+		print("<td>".$lease[2]."</td>");
+		print("<td>".$lease[3]."</td>");
+		print("</tr>\n");
 	}
 	print("</table>\n");
 }
