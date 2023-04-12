@@ -1,5 +1,7 @@
 # dhcpPihole
-Copy dhcpLeases.php to /var/www/html and 10-accesslog-dhcpLeases.conf to /etc/lighttpd/conf-enabled.  Then restart lighttpd (systemctl restart lighttpd)
+Displays your pihole dhcp lease table in an easy to read format.  To install, copy dhcpLeases.php to /var/www/html, 10-accesslog-dhcpLeases.conf to /etc/lighttpd/conf-enabled, then restart lighttpd.
+
+Or you can do this:
 
 ```
 # Download php script
