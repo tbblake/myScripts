@@ -28,7 +28,7 @@ if(!array_key_exists("htmltable",$_GET) && !array_key_exists("htmltable",$_SERVE
 	}
 
 	#dhcp td, #dhcp th {
-		border: 0px solid #ddd;
+		border: 0px;
 		padding: 0 5;
 	}
 
