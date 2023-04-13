@@ -1,23 +1,27 @@
 <?php
 // https://github.com/tbblake/myScripts/tree/main/dhcpPihole
-$htmltable=array_key_exists("htmltable",$_GET);
-$texttable=array_key_exists("texttable",$_GET);
-$nodate=array_key_exists("nodate",$_GET);
+$htmlTable=array_key_exists("htmlTable",$_GET);
+$textTable=array_key_exists("textTable",$_GET);
+$noDate=array_key_exists("noDate",$_GET);
 $dateFormat="m/d/y h:i:sa";
 
-if($htmltable || $texttable) {
+if($htmlTable || $textTable) {
 	$file="/etc/pihole/dhcp.leases";
 	$data=file($file);
 	natsort($data);
 	$data=array_reverse($data,false);
 	$leases=[];
 	foreach ($data as $line) {
-		array_push($leases,explode(" ",$line));
-		$leases[sizeof($leases)-1][0]=date($dateFormat, $leases[sizeof($leases)-1][0]);
+		$lease=explode(" ",$line);
+		array_pop($lease);
+		array_push($lease,$lease[0]);
+		array_push($lease,ip2long($lease[2]));
+		$lease[0]=date($dateFormat,$lease[0]);
+		array_push($leases,$lease);
 	}
 }
-if($htmltable) {
-	if(!$nodate) {
+if($htmlTable) {
+	if(!$noDate) {
 		print("<table id='date'><tr><td>");
 		print date($dateFormat);
 		print("</td></tr></table><br>\n");
@@ -33,8 +37,8 @@ if($htmltable) {
 		print("</tr>\n");
 	}
 	print("</table>\n");
-} elseif ($texttable) {
-	if(!$nodate) {
+} elseif ($textTable) {
+	if(!$noDate) {
 		print(date($dateFormat)."\n\n");
 	}
 	$strLengths=array_fill(0,4,0);
@@ -70,7 +74,7 @@ if($htmltable) {
 					document.getElementById("status").innerHTML = this.responseText;
 				}
 			};
-			xhttp.open("GET", "dhcpLeases.php?htmltable", true);
+			xhttp.open("GET", "dhcpLeases.php?htmlTable", true);
 			xhttp.send();
 		}
 		updateStatus();
