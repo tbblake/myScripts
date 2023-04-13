@@ -1,6 +1,63 @@
-<!-- https://github.com/tbblake/myScripts/tree/main/dhcpPihole -->
 <?php
-if(!array_key_exists("htmltable",$_GET) && !array_key_exists("htmltable",$_SERVER)) {
+// https://github.com/tbblake/myScripts/tree/main/dhcpPihole
+$htmltable=array_key_exists("htmltable",$_GET);
+$texttable=array_key_exists("texttable",$_GET);
+$nodate=array_key_exists("nodate",$_GET);
+$dateFormat="m/d/y h:i:sa";
+
+if($htmltable || $texttable) {
+	$file="/etc/pihole/dhcp.leases";
+	$data=file($file);
+	natsort($data);
+	$data=array_reverse($data,false);
+	$leases=[];
+	foreach ($data as $line) {
+		array_push($leases,explode(" ",$line));
+		$leases[sizeof($leases)-1][0]=date($dateFormat, $leases[sizeof($leases)-1][0]);
+	}
+}
+if($htmltable) {
+	if(!$nodate) {
+		print("<table id='date'><tr><td>");
+		print date($dateFormat);
+		print("</td></tr></table><br>\n");
+	}
+	print("<table id='dhcp'>\n");
+	print("<tr><th>Expires</th><th>MAC</th><th>IP</th><th>Name</th></tr>\n");
+	foreach ($leases as $lease) {
+		print("<tr>");
+		print("<td>".$lease[0]."</td>");
+		print("<td>".$lease[1]."</td>");
+		print("<td>".$lease[2]."</td>");
+		print("<td>".$lease[3]."</td>");
+		print("</tr>\n");
+	}
+	print("</table>\n");
+} elseif ($texttable) {
+	if(!$nodate) {
+		print(date($dateFormat)."\n\n");
+	}
+	//array_unshift($leases,["Expires","MAC","IP","Name"]);
+	$strLengths=array_fill(0,4,0);
+	foreach ($leases as $lease) {
+		for($i=0;$i<4;$i++) {
+			if(strlen($lease[$i]) > $strLengths[$i]) {
+				$strLengths[$i]=strlen($lease[$i]);
+			}
+		}
+	}
+	foreach ($leases as $lease) {
+		for($i=0;$i<4;$i++) {
+			$formatSpec="%-".$strLengths[$i]."s  ";
+			printf($formatSpec,$lease[$i]);
+		}
+		print("\n");
+		//print($lease[0]."\t");
+		//print($lease[1]."\t");
+		//print($lease[2]."\t");
+		//print($lease[3]."\n");
+	}
+} else {
 	?>
 	<!doctype html>
 	<html>
@@ -58,31 +115,5 @@ if(!array_key_exists("htmltable",$_GET) && !array_key_exists("htmltable",$_SERVE
 	</body>
 	</html>
 	<?php
-} else {
-	$file="/etc/pihole/dhcp.leases";
-	# $dateFormat="m/d/Y h:i:sa T";
-	$dateFormat="m/d/Y h:i:sa";
-	$data=file($file);
-	natsort($data);
-	$data=array_reverse($data,false);
-	$leases=[];
-	foreach ($data as $line) {
-		array_push($leases,explode(" ",$line));
-		$leases[sizeof($leases)-1][0]=date($dateFormat, $leases[sizeof($leases)-1][0]);
-	}
-	print("<table id='date'><tr><td>");
-	print date($dateFormat);
-	print("</td></tr></table><br>\n");
-	print("<table id='dhcp'>\n");
-	print("<tr><th>Expires</th><th>MAC</th><th>IP</th><th>Name</th></tr>\n");
-	foreach ($leases as $lease) {
-		print("<tr>");
-		print("<td>".$lease[0]."</td>");
-		print("<td>".$lease[1]."</td>");
-		print("<td>".$lease[2]."</td>");
-		print("<td>".$lease[3]."</td>");
-		print("</tr>\n");
-	}
-	print("</table>\n");
 }
 ?>
