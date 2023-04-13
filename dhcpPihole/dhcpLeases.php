@@ -37,7 +37,6 @@ if($htmltable) {
 	if(!$nodate) {
 		print(date($dateFormat)."\n\n");
 	}
-	//array_unshift($leases,["Expires","MAC","IP","Name"]);
 	$strLengths=array_fill(0,4,0);
 	foreach ($leases as $lease) {
 		for($i=0;$i<4;$i++) {
@@ -52,10 +51,6 @@ if($htmltable) {
 			printf($formatSpec,$lease[$i]);
 		}
 		print("\n");
-		//print($lease[0]."\t");
-		//print($lease[1]."\t");
-		//print($lease[2]."\t");
-		//print($lease[3]."\n");
 	}
 } else {
 	?>
