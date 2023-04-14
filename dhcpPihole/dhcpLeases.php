@@ -3,13 +3,17 @@
 $htmlTable=array_key_exists("htmlTable",$_GET);
 $textTable=array_key_exists("textTable",$_GET);
 $noDate=array_key_exists("noDate",$_GET);
+if(array_key_exists("sortField")) {
+	$sortFieldParam=["sortField"];
+}
+if(array_key_exists("sortOrder")) {
+	$sortOrderParam=["sortOrder"];
+}
 $dateFormat="m/d/y h:i:sa";
 
 if($htmlTable || $textTable) {
 	$file="/etc/pihole/dhcp.leases";
 	$data=file($file);
-	natsort($data);
-	$data=array_reverse($data,false);
 	$leases=[];
 	foreach ($data as $line) {
 		$lease=explode(" ",$line);
@@ -18,6 +22,45 @@ if($htmlTable || $textTable) {
 		array_push($lease,ip2long($lease[2]));
 		$lease[0]=date($dateFormat,$lease[0]);
 		array_push($leases,$lease);
+	}
+
+
+	// sorting mac testing code
+	// $macs=array_column($leases,1);
+	// sort($macs);
+	// foreach ($macs as $mac) {
+		// print($mac."\n");
+	// }
+	// exit();
+
+	$sortField="expires";
+	$sortOrder="desc";
+
+	$sortOrderFlag=SORT_ASC;
+	$sortOrder=="asc" && $sortOrderFlag=SORT_ASC;
+	$sortOrder=="desc" && $sortOrderFlag=SORT_DESC;
+
+	switch($sortField) {
+		case "expires":
+			$sortKeys=array_column($leases,4);
+			array_multisort($sortKeys,SORT_NUMERIC,$sortOrderFlag,$leases);
+			break;
+		case "mac":
+			$sortKeys=array_column($leases,1);
+			array_multisort($sortKeys,SORT_FLAG_CASE,$sortOrderFlag,$leases);
+			break;
+		case "ip":
+			$sortKeys=array_column($leases,5);
+			array_multisort($sortKeys,SORT_NUMERIC,$sortOrderFlag,$leases);
+			break;
+		case "name":
+			$sortKeys=array_column($leases,3);
+			array_multisort($sortKeys,SORT_NATURAL|SORT_FLAG_CASE,$sortOrderFlag,$leases);
+			break;
+		default: // same as "expires"
+			$sortKeys=array_column($leases,4);
+			array_multisort($sortKeys,SORT_NUMERIC,$sortOrderFlag,$leases);
+			break;
 	}
 }
 if($htmlTable) {
