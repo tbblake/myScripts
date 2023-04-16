@@ -3,10 +3,10 @@
 $htmlTable=array_key_exists("htmlTable",$_GET);
 $textTable=array_key_exists("textTable",$_GET);
 $noDate=array_key_exists("noDate",$_GET);
-if(array_key_exists("sortField")) {
+if(array_key_exists("sortField",$_GET)) {
 	$sortFieldParam=["sortField"];
 }
-if(array_key_exists("sortOrder")) {
+if(array_key_exists("sortOrder",$_GET)) {
 	$sortOrderParam=["sortOrder"];
 }
 $dateFormat="m/d/y h:i:sa";
