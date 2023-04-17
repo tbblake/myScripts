@@ -11,6 +11,7 @@
 // htmlTable - output html table
 // textTable - output text table
 // jsonTable - output json table
+// noDate - supresses date in output
 $htmlTable=array_key_exists("htmlTable",$_GET);
 $textTable=array_key_exists("textTable",$_GET);
 $jsonTable=array_key_exists("jsonTable",$_GET);
@@ -138,16 +139,17 @@ if($htmlTable) {
 } else {
 	?>
 	<!doctype html>
+	<!-- https://github.com/tbblake/myScripts/tree/main/dhcpPihole -->
 	<html>
 	<head>
 	<title>Lease Status</title>
 	<link href="data:image/x-icon;base64,AAABAAEAEBAAAAEAIABoBAAAFgAAACgAAAAQAAAAIAAAAAEAIAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAbAAACnAUBJ98BAASnAAAAIwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMAAABxAAAC5DIEvf9FBP3/NwTP/wIACukAAAByAAAACgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABACAAm/IQKH/w4BSv8LAUP/HwKF/xMCWf8MAUX/IwKN/wMAF9EAAAAhAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGALAOt/0wF//8eAn3/HAJ6/zoE2P8kA5T/HgJ//0sE//81BMj/AQAEpwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA0j8E6v81BMv/BQEn/0ME9v9CBPX/RwT//xMCWv82BM3/RwT//wMBFN4AAAAAAAAAAAAAAAAAAAAAAAAARw4CSf8OAkz/AwEX/wUBJP8rA6b/QgT0/zMDxP8FAST/BQEp/x4CgP8LAUT9AAAAQwAAAAAAAAAAAAAAAAAAAaA9BOL/CgE//ykDo/9CBPX/JgOa/wUBKf8bAnP/PgTn/ywDrf8IATf/OwTc/wAAAZ0AAAAAAAAAAAAAAAAAAAGCMQO8/x0Cev8+BOT/QgTz/0ME+f8JATr/PATe/0IE9v9ABO7/IgOL/zMEw/8AAAGHAAAAAAAAAAAAAAAAAAAAFQMAFdMFASn/IwKO/0YE//88BOD/BAEd/zYEzf9HBP//KwOn/woBO/8EAR/aAAAAGwAAAAAAAAAAAAAAAAAAAAAAAABrJgOb/xsCdv8QAk//GgJw/xsCdf8hA4b/FgJl/yECh/8lA5j/AAAAZwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGwcANN83AM//DgBH/y8Ct/9LBP//OAPU/xQAWv81AMr/BgAt3gAAABYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAQC2AFEy/wRmTP8EBh7/DwBP/wQCHf8DWkX/AF81/wAEAMsAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAB/AHA2/wDIWP8AulD/AFId/wAGAP8APAv/AK9M/wDJWf8AjEL/AQMCrQAAAAAAAAAAAAAAAAAAAAAAAAAKAR8K6QDCXP8Aq1H/AJBF/wC6V/8ANRf/ALBQ/wCVRP8Ao0z/AMle/wBAHf8AAAAkAAAAAAAAAAAAAAAAAAAAGAEkDv8AoEv/AKlQ/wCvUf8AdDb/AAIBvwBcKf8ArFD/AKtR/wClT/8AQR7/AAAAPAAAAAAAAAAAAAAAAAAAAAIAAABSAQICngISBtMBBwS6AAAAbwAAAAQAAABXAQQDsQITB9MBBAOrAAAAZAAAAAkAAAAA/j8AAPwfAADwBwAA4AMAAOADAADgAwAAwAEAAMABAADgAwAA8AcAAPAHAADwBwAA8AMAAOADAADgAwAA8ccAAA==" rel="icon" type="image/x-icon" />
 	<script>
-		let updateTimeSeconds=5;
-		let updateTime=updateTimeSeconds*1000;
-		let gSortField=4; // by default we're gonna sort by expiration
-		let gSortOrder=1; // in descending order
-		setInterval(updateStatus,updateTime);
+	let updateTimeSeconds=5;
+	let updateTime=updateTimeSeconds*1000;
+	let gSortField=4; // by default we're gonna sort by expiration
+	let gSortOrder=1; // in descending order
+	setInterval(updateStatus,updateTime);
 	function sortTable(n,h) { // h(how) 0 - alpha  1 - numeric   dir 0 - asc, 1 - desc
 		console.log("Sorting by column "+n+" with type "+h);
 		var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
@@ -225,7 +227,7 @@ if($htmlTable) {
 			xhttp.open("GET", "dhcpLeases.php?htmlTable&sortOrder="+gSortOrder+"&sortField="+gSortField, true);
 			xhttp.send();
 		}
-		updateStatus();
+	updateStatus();
 	</script>
 	<style>
 	#dhcp {
