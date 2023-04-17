@@ -150,6 +150,7 @@ if($htmlTable) {
 	let gSortField=4; // by default we're gonna sort by expiration
 	let gSortOrder=1; // in descending order
 	setInterval(updateStatus,updateTime);
+	// blatantly stolen (borrowed?) from https://www.w3schools.com/howto/howto_js_sort_table.asp
 	function sortTable(n,h) { // h(how) 0 - alpha  1 - numeric   dir 0 - asc, 1 - desc
 		console.log("Sorting by column "+n+" with type "+h);
 		var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
