@@ -37,7 +37,9 @@ if($htmlTable || $textTable || $jsonTable) {
 		array_pop($lease);
 		array_push($lease,$lease[0]);
 		array_push($lease,ip2long($lease[2]));
-		$lease[0]=date($dateFormat,$lease[0]);
+		if($htmlTable || $textTable) {
+			$lease[0]=date($dateFormat,$lease[0]);
+		}
 		array_push($leases,$lease);
 	}
 
@@ -124,16 +126,17 @@ if($htmlTable) {
 		print("\n");
 	}
 } elseif ($jsonTable) {
+	// create new $out array with the date, and a sub-list
+	// of all the leases
 	$out=array("data" => array());
 	if(!$noDate) {
 		$out["date"] = date("U");
 	}
 	$fields=["expire","mac","ip","name"];
+	// step through the leases, push on an associative array
+	// of the 4 important fields
 	foreach ($leases as $lease) {
-		$lease[0]=$lease[4];
-		array_pop($lease);
-		array_pop($lease);
-		array_push($out["data"],array_combine($fields,$lease));
+		array_push($out["data"],array_combine($fields,array_slice($lease,0,4)));
 	}
 	print(json_encode($out));
 } else {
