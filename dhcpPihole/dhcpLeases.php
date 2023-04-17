@@ -4,10 +4,14 @@ $htmlTable=array_key_exists("htmlTable",$_GET);
 $textTable=array_key_exists("textTable",$_GET);
 $noDate=array_key_exists("noDate",$_GET);
 if(array_key_exists("sortField",$_GET)) {
-	$sortFieldParam=["sortField"];
+	$sortFieldParam=$_GET["sortField"];
+} else {
+	$sortFieldParam=4;
 }
 if(array_key_exists("sortOrder",$_GET)) {
-	$sortOrderParam=["sortOrder"];
+	$sortOrderParam=$_GET["sortOrder"];
+} else {
+	$sortOrderParam=0;
 }
 $dateFormat="m/d/y h:i:sa";
 
@@ -24,44 +28,42 @@ if($htmlTable || $textTable) {
 		array_push($leases,$lease);
 	}
 
-
-	// sorting mac testing code
-	// $macs=array_column($leases,1);
-	// sort($macs);
-	// foreach ($macs as $mac) {
-		// print($mac."\n");
-	// }
-	// exit();
-
-	$sortField="expires";
-	$sortOrder="desc";
-
-	$sortOrderFlag=SORT_ASC;
-	$sortOrder=="asc" && $sortOrderFlag=SORT_ASC;
-	$sortOrder=="desc" && $sortOrderFlag=SORT_DESC;
-
-	switch($sortField) {
-		case "expires":
-			$sortKeys=array_column($leases,4);
-			array_multisort($sortKeys,SORT_NUMERIC,$sortOrderFlag,$leases);
+	switch($sortOrderParam) {
+		case 0: // ascending
+			$sortOrderFlag=SORT_ASC;
 			break;
-		case "mac":
-			$sortKeys=array_column($leases,1);
-			array_multisort($sortKeys,SORT_FLAG_CASE,$sortOrderFlag,$leases);
+		case 1: // descending
+			$sortOrderFlag=SORT_DESC;
 			break;
-		case "ip":
-			$sortKeys=array_column($leases,5);
-			array_multisort($sortKeys,SORT_NUMERIC,$sortOrderFlag,$leases);
-			break;
-		case "name":
-			$sortKeys=array_column($leases,3);
-			array_multisort($sortKeys,SORT_NATURAL|SORT_FLAG_CASE,$sortOrderFlag,$leases);
-			break;
-		default: // same as "expires"
-			$sortKeys=array_column($leases,4);
-			array_multisort($sortKeys,SORT_NUMERIC,$sortOrderFlag,$leases);
+		default: // ascending
+			$sortOrderFlag=SORT_ASC;
 			break;
 	}
+
+	switch($sortFieldParam) {
+		case 4: // expiration
+			$sortField=$sortFieldParam;
+			$sortType=SORT_NUMERIC;
+			break;
+		case 1: // mac
+			$sortField=$sortFieldParam;
+			$sortType=SORT_FLAG_CASE;
+			break;
+		case 5: // ip
+			$sortField=$sortFieldParam;
+			$sortType=SORT_NUMERIC;
+			break;
+		case 3: // name
+			$sortField=$sortFieldParam;
+			$sortType=SORT_NATURAL|SORT_FLAG_CASE;
+			break;
+		default: // same as "expires"
+			$sortType=SORT_NUMERIC;
+			$sortField = 4;
+			break;
+	}
+	$sortKeys=array_column($leases,$sortField);
+	array_multisort($sortKeys,$sortType,$sortOrderFlag,$leases);
 }
 if($htmlTable) {
 	if(!$noDate) {
@@ -70,13 +72,22 @@ if($htmlTable) {
 		print("</td></tr></table><br>\n");
 	}
 	print("<table id='dhcp'>\n");
-	print("<tr><th>Expires</th><th>MAC</th><th>IP</th><th>Name</th></tr>\n");
+	print("<tr>");
+	print("<th onclick='sortTable(4,1)'>Expires</th>");
+	print("<th onclick='sortTable(1,0)'>MAC</th>");
+	print("<th onclick='sortTable(5,1)'>IP</th>");
+	print("<th onclick='sortTable(3,0)'>Name</th>");
+	print("<th style='display:none;'>hiddenExpiry</th>");
+	print("<th style='display:none;'>hiddenIP</th>");
+	print("</tr>\n");
 	foreach ($leases as $lease) {
 		print("<tr>");
 		print("<td>".$lease[0]."</td>");
 		print("<td>".$lease[1]."</td>");
 		print("<td>".$lease[2]."</td>");
 		print("<td>".$lease[3]."</td>");
+		print("<td style='display:none;'>".$lease[4]."</td>");
+		print("<td style='display:none;'>".$lease[5]."</td>");
 		print("</tr>\n");
 	}
 	print("</table>\n");
@@ -109,15 +120,84 @@ if($htmlTable) {
 	<script>
 		let updateTimeSeconds=5;
 		let updateTime=updateTimeSeconds*1000;
+		let gSortField=4; // by default we're gonna sort by expiration
+		let gSortOrder=1; // in descending order
 		setInterval(updateStatus,updateTime);
-		function updateStatus() {
+	function sortTable(n,h) { // h(how) 0 - alpha  1 - numeric   dir 0 - asc, 1 - desc
+		console.log("Sorting by column "+n+" with type "+h);
+		var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+		table = document.getElementById("dhcp");
+		switching = true;
+		// Set the sorting direction to ascending:
+		dir = 0;
+		/* Make a loop that will continue until
+		no switching has been done: */
+		while (switching) {
+			// Start by saying: no switching is done:
+			switching = false;
+			rows = table.rows;
+			/* Loop through all table rows (except the
+			first, which contains table headers): */
+			for (i = 1; i < (rows.length - 1); i++) {
+				// Start by saying there should be no switching:
+				shouldSwitch = false;
+				/* Get the two elements you want to compare,
+				one from current row and one from the next: */
+				x = rows[i].getElementsByTagName("TD")[n];
+				y = rows[i + 1].getElementsByTagName("TD")[n];
+				/* Check if the two rows should switch place,
+				based on the direction, asc or desc: */
+				if (dir == 0 && h == 0) {
+					if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+						// If so, mark as a switch and break the loop:
+						shouldSwitch = true;
+						break;
+					}
+				} else if (dir == 0  && h == 1) {
+					if (Number(x.innerHTML) > Number(y.innerHTML)) {
+						shouldSwitch = true;
+						break;
+					}
+				} else if (dir == 1 && h == 0) {
+					if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+						// If so, mark as a switch and break the loop:
+						shouldSwitch = true;
+						break;
+					}
+				} else if (dir == 1 && h == 1) {
+					if (Number(x.innerHTML) < Number(y.innerHTML)) {
+						shouldSwitch = true;
+						break;
+					}
+				}
+			}
+			if (shouldSwitch) {
+				/* If a switch has been marked, make the switch
+				and mark that a switch has been done: */
+				rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+				switching = true;
+				// Each time a switch is done, increase this count by 1:
+				switchcount++;
+			} else {
+				/* If no switching has been done AND the direction is 0,
+				set the direction to 1 and run the while loop again. */
+				if (switchcount == 0 && dir == 0) {
+					dir = 1;
+					switching = true;
+				}
+			}
+		}
+		gSortField=n;
+		gSortOrder=dir;
+	}
+	function updateStatus() {
 			var xhttp = new XMLHttpRequest();
 			xhttp.onreadystatechange = function() {
 				if (this.readyState == 4 && this.status == 200) {
 					document.getElementById("status").innerHTML = this.responseText;
 				}
 			};
-			xhttp.open("GET", "dhcpLeases.php?htmlTable", true);
+			xhttp.open("GET", "dhcpLeases.php?htmlTable&sortOrder="+gSortOrder+"&sortField="+gSortField, true);
 			xhttp.send();
 		}
 		updateStatus();
