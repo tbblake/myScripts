@@ -25,7 +25,7 @@ Or this:
 ```
 git clone https://github.com/tbblake/myScripts.git
 cp myScripts/dhcpPihole/dhcpLeases.php /var/www/html/dhcpLeases.php
-cp myScripts/dhcpPihole/10-accesslog-dhcpLeases.conf /var/www/html/dhcpLeases.php 
+cp myScripts/dhcpPihole/10-accesslog-dhcpLeases.conf /etc/lighttpd/conf-enabled/10-accesslog-dhcpLeases.conf
 systemctl restart lighttpd
 ```
 
