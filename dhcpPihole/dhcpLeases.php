@@ -2,6 +2,7 @@
 // https://github.com/tbblake/myScripts/tree/main/dhcpPihole
 $htmlTable=array_key_exists("htmlTable",$_GET);
 $textTable=array_key_exists("textTable",$_GET);
+$jsonTable=array_key_exists("jsonTable",$_GET);
 $noDate=array_key_exists("noDate",$_GET);
 if(array_key_exists("sortField",$_GET)) {
 	$sortFieldParam=$_GET["sortField"];
@@ -15,7 +16,7 @@ if(array_key_exists("sortOrder",$_GET)) {
 }
 $dateFormat="m/d/y h:i:sa";
 
-if($htmlTable || $textTable) {
+if($htmlTable || $textTable || $jsonTable) {
 	$file="/etc/pihole/dhcp.leases";
 	$data=file($file);
 	$leases=[];
@@ -96,7 +97,7 @@ if($htmlTable) {
 		print(date($dateFormat)."\n\n");
 	}
 	$strLengths=array_fill(0,4,0);
-	foreach ($leases as $lease) {
+	foreach ($leases as $lease) { // find longest string in each field
 		for($i=0;$i<4;$i++) {
 			if(strlen($lease[$i]) > $strLengths[$i]) {
 				$strLengths[$i]=strlen($lease[$i]);
@@ -110,6 +111,19 @@ if($htmlTable) {
 		}
 		print("\n");
 	}
+} elseif ($jsonTable) {
+	$out=array("data" => array());
+	if(!$noDate) {
+		$out["date"] = date("U");
+	}
+	$fields=["expire","mac","ip","name"];
+	foreach ($leases as $lease) {
+		$lease[0]=$lease[4];
+		array_pop($lease);
+		array_pop($lease);
+		array_push($out["data"],array_combine($fields,$lease));
+	}
+	print(json_encode($out));
 } else {
 	?>
 	<!doctype html>
