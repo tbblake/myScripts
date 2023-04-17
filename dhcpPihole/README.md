@@ -38,3 +38,5 @@ systemctl restart lighttpd
 ```
 
 Then browse to the script http://your.pihole.ip.here/dhcpLeases.php
+
+![example](example.png)
