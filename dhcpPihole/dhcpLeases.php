@@ -1,5 +1,16 @@
 <?php
 // https://github.com/tbblake/myScripts/tree/main/dhcpPihole
+// sortOrder:
+//	0 - ascending
+//	1 - descending
+// sortField:
+//	1 - mac address
+//	3 - name
+//	4 - expiration
+//	5 - ip
+// htmlTable - output html table
+// textTable - output text table
+// jsonTable - output json table
 $htmlTable=array_key_exists("htmlTable",$_GET);
 $textTable=array_key_exists("textTable",$_GET);
 $jsonTable=array_key_exists("jsonTable",$_GET);
@@ -42,21 +53,21 @@ if($htmlTable || $textTable || $jsonTable) {
 	}
 
 	switch($sortFieldParam) {
-		case 4: // expiration
-			$sortField=$sortFieldParam;
-			$sortType=SORT_NUMERIC;
-			break;
 		case 1: // mac
 			$sortField=$sortFieldParam;
 			$sortType=SORT_FLAG_CASE;
 			break;
-		case 5: // ip
-			$sortField=$sortFieldParam;
-			$sortType=SORT_NUMERIC;
-			break;
 		case 3: // name
 			$sortField=$sortFieldParam;
 			$sortType=SORT_NATURAL|SORT_FLAG_CASE;
+			break;
+		case 4: // expiration
+			$sortField=$sortFieldParam;
+			$sortType=SORT_NUMERIC;
+			break;
+		case 5: // ip
+			$sortField=$sortFieldParam;
+			$sortType=SORT_NUMERIC;
 			break;
 		default: // same as "expires"
 			$sortType=SORT_NUMERIC;
