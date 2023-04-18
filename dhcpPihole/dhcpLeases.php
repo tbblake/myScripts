@@ -12,6 +12,13 @@
 // textTable - output text table
 // jsonTable - output json table
 // noDate - supresses date in output
+
+$leaseFile="/etc/pihole/dhcp.leases";
+if(!is_readable($leaseFile)) {
+	print("Can't read $leaseFile");
+	exit(1);
+}
+
 $htmlTable=array_key_exists("htmlTable",$_GET);
 $textTable=array_key_exists("textTable",$_GET);
 $jsonTable=array_key_exists("jsonTable",$_GET);
@@ -29,8 +36,7 @@ if(array_key_exists("sortOrder",$_GET)) {
 $dateFormat="m/d/y h:i:sa";
 
 if($htmlTable || $textTable || $jsonTable) {
-	$file="/etc/pihole/dhcp.leases";
-	$data=file($file);
+	$data=file($leaseFile);
 	$leases=[];
 	foreach ($data as $line) {
 		$lease=explode(" ",$line);
