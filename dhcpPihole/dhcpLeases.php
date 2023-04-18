@@ -38,6 +38,12 @@ $dateFormat="m/d/y h:i:sa";
 if($htmlTable || $textTable || $jsonTable) {
 	$data=file($leaseFile);
 	$leases=[];
+	# in each line remove the uid
+	# and push the date and ip in
+	# numeric format onto the end
+	# if a displayable method is picked
+	# (html or text) reformat the date
+	# in column 1
 	foreach ($data as $line) {
 		$lease=explode(" ",$line);
 		array_pop($lease);
@@ -62,9 +68,19 @@ if($htmlTable || $textTable || $jsonTable) {
 	}
 
 	switch($sortFieldParam) {
+		case 0: // expiration, re-map to our hidden sorting column 4
+			$sortFieldParam=4;
+			$sortField=$sortFieldParam;
+			$sortType=SORT_NUMERIC;
+			break;
 		case 1: // mac
 			$sortField=$sortFieldParam;
 			$sortType=SORT_FLAG_CASE;
+			break;
+		case 2: // ip, re-map to our hidden sorting column 5
+			$sortFieldParam=5;
+			$sortField=$sortFieldParam;
+			$sortType=SORT_NUMERIC;
 			break;
 		case 3: // name
 			$sortField=$sortFieldParam;
@@ -83,6 +99,7 @@ if($htmlTable || $textTable || $jsonTable) {
 			$sortField = 4;
 			break;
 	}
+	# extract the column we'll sort by, then sort the main array using that column
 	$sortKeys=array_column($leases,$sortField);
 	array_multisort($sortKeys,$sortType,$sortOrderFlag,$leases);
 }
@@ -138,11 +155,13 @@ if($htmlTable) {
 	if(!$noDate) {
 		$out["date"] = date("U");
 	}
-	$fields=["expire","mac","ip","name"];
+	$keyFields=["expire","mac","ip","name"];
 	// step through the leases, push on an associative array
-	// of the 4 important fields
+	// of the 4 important fields (leave out the two fields we used for sorting)
 	foreach ($leases as $lease) {
-		array_push($out["data"],array_combine($fields,array_slice($lease,0,4)));
+		$usefulInfo=array_slice($lease,0,4); # slice out the first four fields
+		$useInfoAssoc=array_combine($keyFields,$usefulInfo); # combine them with headers into an associate array
+		array_push($out["data"],$useInfoAssoc); # push onto a larger array to display
 	}
 	print(json_encode($out));
 } else {
