@@ -24,17 +24,17 @@ Or this:
 
 ```
 git clone https://github.com/tbblake/myScripts.git
-cp myScripts/dhcpPihole/dhcpLeases.php /var/www/html/dhcpLeases.php
-cp myScripts/dhcpPihole/10-accesslog-dhcpLeases.conf /etc/lighttpd/conf-enabled/10-accesslog-dhcpLeases.conf
-systemctl restart lighttpd
+sudo cp myScripts/dhcpPihole/dhcpLeases.php /var/www/html/dhcpLeases.php
+sudo cp myScripts/dhcpPihole/10-accesslog-dhcpLeases.conf /etc/lighttpd/conf-enabled/10-accesslog-dhcpLeases.conf
+sudo systemctl restart lighttpd
 ```
 
 Or this:
 
 ```
-curl -sLo /var/www/html/dhcpLeases.php https://raw.githubusercontent.com/tbblake/myScripts/main/dhcpPihole/dhcpLeases.php
-curl -sLo /etc/lighttpd/conf-enabled/10-accesslog-dhcpLeases.conf https://raw.githubusercontent.com/tbblake/myScripts/main/dhcpPihole/10-accesslog-dhcpLeases.conf
-systemctl restart lighttpd
+sudo curl -sLo /var/www/html/dhcpLeases.php https://raw.githubusercontent.com/tbblake/myScripts/main/dhcpPihole/dhcpLeases.php
+sudo curl -sLo /etc/lighttpd/conf-enabled/10-accesslog-dhcpLeases.conf https://raw.githubusercontent.com/tbblake/myScripts/main/dhcpPihole/10-accesslog-dhcpLeases.conf
+sudo systemctl restart lighttpd
 ```
 
 Then browse to the script http://your.pihole.ip.here/dhcpLeases.php
