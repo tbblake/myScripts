@@ -8,10 +8,16 @@
 //	3 - name
 //	4 - expiration (0 works as well, re-mapped to 4)
 //	5 - ip (2 works as well, re-mapped to 5)
-// htmlTable - output html table
-// textTable - output text table
-// jsonTable - output json table
+// fmt:
+//	0 - output html table
+//	1 - output text table
+//	2 - output json table
 // noDate - supresses date in output
+//
+// htmlTable - output html table (deprecated)
+// textTable - output text table (deprecated)
+// jsonTable - output json table (deprecated)
+
 
 $leaseFile="/etc/pihole/dhcp.leases";
 if(!is_readable($leaseFile)) {
@@ -19,10 +25,39 @@ if(!is_readable($leaseFile)) {
 	exit(1);
 }
 
+$noDate=array_key_exists("noDate",$_GET);
+
+// older format code, deprecated
+// options, use fmt instead
 $htmlTable=array_key_exists("htmlTable",$_GET);
 $textTable=array_key_exists("textTable",$_GET);
 $jsonTable=array_key_exists("jsonTable",$_GET);
-$noDate=array_key_exists("noDate",$_GET);
+
+if($htmlTable || $textTable || $jsonTable) {
+	if($htmlTable) {
+		$fmt=0;
+	} else if ($textTable) {
+		$fmt=1;
+	} else if ($jsonTable) {
+		$fmt=2;
+	}
+}
+// end deprecated code
+
+if(array_key_exists("fmt",$_GET)) {
+	$fmtParam=$_GET["fmt"];
+	switch($fmtParam) {
+		case 0:
+			$fmt=0; // html
+			break;
+		case 1:
+			$fmt=1; // text
+			break;
+		case 2:
+			$fmt=2; // json
+			break;
+	}
+}
 if(array_key_exists("sortField",$_GET)) {
 	$sortFieldParam=$_GET["sortField"];
 } else {
@@ -34,9 +69,10 @@ if(array_key_exists("sortOrder",$_GET)) {
 	$sortOrderParam=0;
 }
 $dateFormat="m/d/y h:i:sa";
+$humanFormats=[0,1]; // html and text formats are for human consumption
 
-# read in the leases,format and sort
-if($htmlTable || $textTable || $jsonTable) {
+if(isset($fmt)) { // we have a format set, otherwise print the outer HTML
+	# read in the leases,format and sort
 	$data=file($leaseFile);
 	$leases=[];
 	# in each line remove the uid
@@ -50,7 +86,7 @@ if($htmlTable || $textTable || $jsonTable) {
 		array_pop($lease);
 		array_push($lease,$lease[0]);
 		array_push($lease,ip2long($lease[2]));
-		if($htmlTable || $textTable) {
+		if(in_array($fmt,$humanFormats)) { // human readable formats, column 0 should be human readable
 			$lease[0]=date($dateFormat,$lease[0]);
 		}
 		array_push($leases,$lease);
@@ -103,67 +139,73 @@ if($htmlTable || $textTable || $jsonTable) {
 	# extract the column we'll sort by, then sort the main array using that column
 	$sortKeys=array_column($leases,$sortField);
 	array_multisort($sortKeys,$sortType,$sortOrderFlag,$leases);
-	if($htmlTable) {
-		if(!$noDate) {
-			print("<table id='date'><tr><td>");
-			print date($dateFormat);
-			print("</td></tr></table><br>\n");
-		}
-		print("<table id='dhcp'>\n");
-		print("<tr>");
-		print("<th onclick='sortTable(4,1)'>Expires</th>");
-		print("<th onclick='sortTable(1,0)'>MAC</th>");
-		print("<th onclick='sortTable(5,1)'>IP</th>");
-		print("<th onclick='sortTable(3,0)'>Name</th>");
-		print("<th style='display:none;'>hiddenExpiry</th>");
-		print("<th style='display:none;'>hiddenIP</th>");
-		print("</tr>\n");
-		foreach ($leases as $lease) {
+	
+	# print the table according to $fmt
+	switch($fmt) {
+		case 0: // html
+			if(!$noDate) {
+				print("<table id='date'><tr><td>");
+				print date($dateFormat);
+				print("</td></tr></table><br>\n");
+			}
+			print("<table id='dhcp'>\n");
 			print("<tr>");
-			print("<td>".$lease[0]."</td>");
-			print("<td>".$lease[1]."</td>");
-			print("<td>".$lease[2]."</td>");
-			print("<td>".$lease[3]."</td>");
-			print("<td style='display:none;'>".$lease[4]."</td>");
-			print("<td style='display:none;'>".$lease[5]."</td>");
+			print("<th onclick='sortTable(4,1)'>Expires</th>");
+			print("<th onclick='sortTable(1,0)'>MAC</th>");
+			print("<th onclick='sortTable(5,1)'>IP</th>");
+			print("<th onclick='sortTable(3,0)'>Name</th>");
+			print("<th style='display:none;'>hiddenExpiry</th>");
+			print("<th style='display:none;'>hiddenIP</th>");
 			print("</tr>\n");
-		}
-		print("</table>\n");
-	} elseif ($textTable) {
-		if(!$noDate) {
-			print(date($dateFormat)."\n\n");
-		}
-		$strLengths=array_fill(0,4,0);
-		foreach ($leases as $lease) { // find longest string in each field
-			for($i=0;$i<4;$i++) {
-				if(strlen($lease[$i]) > $strLengths[$i]) {
-					$strLengths[$i]=strlen($lease[$i]);
+			foreach ($leases as $lease) {
+				print("<tr>");
+				print("<td>".$lease[0]."</td>");
+				print("<td>".$lease[1]."</td>");
+				print("<td>".$lease[2]."</td>");
+				print("<td>".$lease[3]."</td>");
+				print("<td style='display:none;'>".$lease[4]."</td>");
+				print("<td style='display:none;'>".$lease[5]."</td>");
+				print("</tr>\n");
+			}
+			print("</table>\n");
+			break;
+		case 1: // text
+			if(!$noDate) {
+				print(date($dateFormat)."\n\n");
+			}
+			$strLengths=array_fill(0,4,0);
+			foreach ($leases as $lease) { // find longest string in each field
+				for($i=0;$i<4;$i++) {
+					if(strlen($lease[$i]) > $strLengths[$i]) {
+						$strLengths[$i]=strlen($lease[$i]);
+					}
 				}
 			}
-		}
-		foreach ($leases as $lease) {
-			for($i=0;$i<4;$i++) {
-				$formatSpec="%-".$strLengths[$i]."s  ";
-				printf($formatSpec,$lease[$i]);
+			foreach ($leases as $lease) {
+				for($i=0;$i<4;$i++) {
+					$formatSpec="%-".$strLengths[$i]."s  ";
+					printf($formatSpec,$lease[$i]);
+				}
+				print("\n");
 			}
-			print("\n");
-		}
-	} elseif ($jsonTable) {
-		// create new $out array with the date, and a sub-list
-		// of all the leases
-		$out=array("data" => array());
-		if(!$noDate) {
-			$out["date"] = date("U");
-		}
-		$keyFields=["expire","mac","ip","name"];
-		// step through the leases, push on an associative array
-		// of the 4 important fields (leave out the two fields we used for sorting)
-		foreach ($leases as $lease) {
-			$usefulInfo=array_slice($lease,0,4); # slice out the first four fields
-			$useInfoAssoc=array_combine($keyFields,$usefulInfo); # combine them with headers into an associate array
-			array_push($out["data"],$useInfoAssoc); # push onto a larger array to display
-		}
-		print(json_encode($out));
+			break;
+		case 2: // json
+			// create new $out array with the date, and a sub-list
+			// of all the leases
+			$out=array("data" => array());
+			if(!$noDate) {
+				$out["date"] = date("U");
+			}
+			$keyFields=["expire","mac","ip","name"];
+			// step through the leases, push on an associative array
+			// of the 4 important fields (leave out the two fields we used for sorting)
+			foreach ($leases as $lease) {
+				$usefulInfo=array_slice($lease,0,4); # slice out the first four fields
+				$useInfoAssoc=array_combine($keyFields,$usefulInfo); # combine them with headers into an associate array
+				array_push($out["data"],$useInfoAssoc); # push onto a larger array to display
+			}
+			print(json_encode($out));
+			break;
 	}
 } else {
 	?>
@@ -254,7 +296,7 @@ if($htmlTable || $textTable || $jsonTable) {
 					document.getElementById("status").innerHTML = this.responseText;
 				}
 			};
-			xhttp.open("GET", "dhcpLeases.php?htmlTable&sortOrder="+gSortOrder+"&sortField="+gSortField, true);
+			xhttp.open("GET", "dhcpLeases.php?fmt=0&sortOrder="+gSortOrder+"&sortField="+gSortField, true);
 			xhttp.send();
 		}
 	updateStatus();
