@@ -41,5 +41,3 @@ done
 >&2 printf "\n"
 cat $leaseFile
 rm -f $leaseFile
-
-#\033[K
