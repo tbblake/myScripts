@@ -18,7 +18,6 @@
 // textTable - output text table (deprecated)
 // jsonTable - output json table (deprecated)
 
-
 $leaseFile="/etc/pihole/dhcp.leases";
 if(!is_readable($leaseFile)) {
 	print("Can't read $leaseFile");
