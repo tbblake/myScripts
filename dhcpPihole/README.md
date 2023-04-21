@@ -16,10 +16,11 @@ Additional options can be passed to the php script in the URL for text & json ou
   * 0 - html
   * 1 - text
   * 2 - json
-* htmlTable - output html table (deprecated)
-* textTable - output text table (deprecated)
-* jsonTable - output json table (deprecated)
 * noDate - supresses date in output
+
+* htmlTable - output html table (deprecated, use fmt flag)
+* textTable - output text table (deprecated, use fmt flag)
+* jsonTable - output json table (deprecated, use fmt flag)
 
 To install, copy dhcpLeases.php to /var/www/html, 10-accesslog-dhcpLeases.conf to /etc/lighttpd/conf-enabled, then restart lighttpd.
 
