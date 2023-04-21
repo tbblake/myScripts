@@ -2,7 +2,7 @@
 # dhcpPihole
 This displays your pihole dhcp lease table in an easy to read format.  A lighttpd configuration is included to restrict what gets logged, to reduce SD card wear & tear.  Only tested on a vanilla pihole install on a vanilla raspbian install on a raspberry pi 3b+.
 
-Additional options can be passed to the php script in the URL for text & json output, date output, and sorting options:
+Additional options can be passed to the php script in the URL for html, text & json, date output, and sorting options:
 
 * sortOrder
   * 0 - ascending
@@ -30,6 +30,7 @@ Or this:
 git clone https://github.com/tbblake/myScripts.git
 sudo cp myScripts/dhcpPihole/dhcpLeases.php /var/www/html/dhcpLeases.php
 sudo cp myScripts/dhcpPihole/10-accesslog-dhcpLeases.conf /etc/lighttpd/conf-enabled/10-accesslog-dhcpLeases.conf
+sudo chmod 644 /var/www/html/dhcpLeases.php /etc/lighttpd/conf-enabled/10-accesslog-dhcpLeases.conf
 sudo systemctl restart lighttpd
 ```
 
@@ -38,6 +39,7 @@ Or this:
 ```
 sudo curl -sLo /var/www/html/dhcpLeases.php https://raw.githubusercontent.com/tbblake/myScripts/main/dhcpPihole/dhcpLeases.php
 sudo curl -sLo /etc/lighttpd/conf-enabled/10-accesslog-dhcpLeases.conf https://raw.githubusercontent.com/tbblake/myScripts/main/dhcpPihole/10-accesslog-dhcpLeases.conf
+sudo chmod 644 /var/www/html/dhcpLeases.php /etc/lighttpd/conf-enabled/10-accesslog-dhcpLeases.conf
 sudo systemctl restart lighttpd
 ```
 
