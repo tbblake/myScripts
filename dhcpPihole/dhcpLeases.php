@@ -295,7 +295,7 @@ if(isset($fmt)) { // we have a format set, otherwise print the outer HTML
 					document.getElementById("status").innerHTML = this.responseText;
 				}
 			};
-			xhttp.open("GET", "dhcpLeases.php?fmt=0&sortOrder="+gSortOrder+"&sortField="+gSortField, true);
+			xhttp.open("GET", "<?php print($_SERVER['SCRIPT_NAME']);?>?fmt=0&sortOrder="+gSortOrder+"&sortField="+gSortField, true);
 			xhttp.send();
 		}
 	updateStatus();
