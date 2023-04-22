@@ -12,6 +12,7 @@
 //	0 - output html table
 //	1 - output text table
 //	2 - output json table
+//	3 - output csv table
 // noDate - supresses date in output
 //
 // htmlTable - output html table (deprecated)
@@ -54,6 +55,9 @@ if(array_key_exists("fmt",$_GET)) {
 			break;
 		case 2:
 			$fmt=2; // json
+			break;
+		case 3:
+			$fmt=3; // csv
 			break;
 	}
 }
@@ -204,6 +208,26 @@ if(isset($fmt)) { // we have a format set, otherwise print the outer HTML
 				array_push($out["data"],$useInfoAssoc); # push onto a larger array to display
 			}
 			print(json_encode($out));
+			break;
+		case 3: // csv
+			$keyFields=["expire","mac","ip","name"];
+			if(!$noDate) {
+				$dateField = date("U");
+				array_push($keyFields,"date");
+			}
+			$out = fopen('php://output', 'w');
+			fputcsv($out, $keyFields);
+			// step through the leases, push on an associative array
+			// of the 4 important fields (leave out the two fields we used for sorting)
+			
+			foreach ($leases as $lease) {
+				$usefulInfo=array_slice($lease,0,4); # slice out the first four fields
+				if(!$noDate) {
+					array_push($usefulInfo,$dateField);
+				}
+				fputcsv($out,$usefulInfo);
+			}
+			fclose($out);
 			break;
 	}
 } else {

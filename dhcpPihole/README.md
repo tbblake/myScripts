@@ -16,6 +16,7 @@ Additional options can be passed to the php script in the URL for html, text & j
   * 0 - html
   * 1 - text
   * 2 - json
+  * 3 - csv
 * noDate - supresses date in output
 
 * htmlTable - output html table (deprecated, use fmt flag)
