@@ -173,6 +173,7 @@ if(isset($fmt)) { // we have a format set, otherwise print the outer HTML
 			print("</table>\n");
 			break;
 		case 1: // text
+			header("Content-Type: text/plain");
 			if(!$noDate) {
 				print(date($dateFormat)."\n\n");
 			}
@@ -195,6 +196,7 @@ if(isset($fmt)) { // we have a format set, otherwise print the outer HTML
 		case 2: // json
 			// create new $out array with the date, and a sub-list
 			// of all the leases
+			header("Content-Type: application/json");
 			$out=array("data" => array());
 			if(!$noDate) {
 				$out["date"] = date("U");
@@ -210,6 +212,7 @@ if(isset($fmt)) { // we have a format set, otherwise print the outer HTML
 			print(json_encode($out));
 			break;
 		case 3: // csv
+			header("Content-Type: text/csv");
 			$keyFields=["expire","mac","ip","name"];
 			if(!$noDate) {
 				$dateField = date("U");
