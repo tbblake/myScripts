@@ -2,7 +2,9 @@
 # generate 40 random leases, useful for testing
 # not meant to be pretty or elegant, just useful
 randomMac() {
-	printf "%02x:%02x:%02x:%02x:%02x:%02x" $(($RANDOM%256)) $(($RANDOM%256)) $(($RANDOM%256)) $(($RANDOM%256)) $(($RANDOM%256)) $(($RANDOM%256))
+	# formatStr="%02X:%02X:%02X:%02X:%02X:%02X" # uppercase macs
+	formatStr="%02x:%02x:%02x:%02x:%02x:%02x" # lowercase macs
+	printf "$formatStr" $(($RANDOM%256)) $(($RANDOM%256)) $(($RANDOM%256)) $(($RANDOM%256)) $(($RANDOM%256)) $(($RANDOM%256))
 }
 
 randomIP() {
