@@ -315,15 +315,15 @@ if(isset($fmt)) { // we have a format set, otherwise print the outer HTML
 		gSortOrder=dir;
 	}
 	function updateStatus() {
-			var xhttp = new XMLHttpRequest();
-			xhttp.onreadystatechange = function() {
-				if (this.readyState == 4 && this.status == 200) {
-					document.getElementById("status").innerHTML = this.responseText;
-				}
-			};
-			xhttp.open("GET", "<?php print($_SERVER['SCRIPT_NAME']);?>?fmt=0&sortOrder="+gSortOrder+"&sortField="+gSortField, true);
-			xhttp.send();
-		}
+		var xhttp = new XMLHttpRequest();
+		xhttp.onreadystatechange = function() {
+			if (this.readyState == 4 && this.status == 200) {
+				document.getElementById("status").innerHTML = this.responseText;
+			}
+		};
+		xhttp.open("GET", "<?php print($_SERVER['SCRIPT_NAME']);?>?fmt=0&sortOrder="+gSortOrder+"&sortField="+gSortField, true);
+		xhttp.send();
+	}
 	updateStatus();
 	</script>
 	<style>
