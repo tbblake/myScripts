@@ -82,6 +82,7 @@ if(isset($fmt)) { // we have a format set, otherwise print the outer HTML
 	# read in the leases,format and sort
 	$data=file_get_contents($leaseFile);
 	$leaseLines = explode(PHP_EOL, $data);
+	array_pop($leaseLines); // remove empty entry at the end 
 	$leases=[];
 	# in each line remove the uid
 	# and push the date and ip in
