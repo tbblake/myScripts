@@ -13,6 +13,7 @@
 //	1 - output text table
 //	2 - output json table
 //	3 - output csv table
+//	4 - the raw dhcp.leases file
 // noDate - supresses date in output
 //
 // htmlTable - output html table (deprecated)
@@ -59,6 +60,9 @@ if(array_key_exists("fmt",$_GET)) {
 		case 3:
 			$fmt=3; // csv
 			break;
+		case 4:
+			$fmt=4; // raw
+			break;
 	}
 }
 if(array_key_exists("sortField",$_GET)) {
@@ -76,7 +80,8 @@ $humanFormats=[0,1]; // html and text formats are for human consumption
 
 if(isset($fmt)) { // we have a format set, otherwise print the outer HTML
 	# read in the leases,format and sort
-	$data=file($leaseFile);
+	$data=file_get_contents($leaseFile);
+	$leaseLines = explode(PHP_EOL, $data);
 	$leases=[];
 	# in each line remove the uid
 	# and push the date and ip in
@@ -84,7 +89,7 @@ if(isset($fmt)) { // we have a format set, otherwise print the outer HTML
 	# if a displayable method is picked
 	# (html or text) reformat the date
 	# in column 0
-	foreach ($data as $line) {
+	foreach ($leaseLines as $line) {
 		$lease=explode(" ",$line);
 		array_pop($lease);
 		array_push($lease,$lease[0]);
@@ -231,6 +236,10 @@ if(isset($fmt)) { // we have a format set, otherwise print the outer HTML
 				fputcsv($out,$usefulInfo);
 			}
 			fclose($out);
+			break;
+		case 4: // raw
+			header("Content-Type: text/plain");
+			print($data);
 			break;
 	}
 } else {

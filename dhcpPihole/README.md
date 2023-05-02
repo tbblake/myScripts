@@ -2,7 +2,7 @@
 # dhcpPihole
 This displays your pihole dhcp lease table in an easy to read format.  A lighttpd configuration is included to restrict what gets logged, to reduce SD card wear & tear.  Only tested on a vanilla pihole install on a vanilla raspbian install on a raspberry pi 3b+.
 
-Additional options can be passed to the php script in the URL for html, text / json / csv, date output, and sorting options:
+Additional options can be passed to the php script in the URL for html / text / json / csv, date output, and sorting options:
 
 * sortOrder
   * 0 - ascending
@@ -17,6 +17,7 @@ Additional options can be passed to the php script in the URL for html, text / j
   * 1 - text
   * 2 - json
   * 3 - csv
+  * 4 - raw dhcp.leases file
 * noDate - supresses date in output
 
 * htmlTable - output html table (deprecated, use fmt flag)
