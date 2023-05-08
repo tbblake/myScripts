@@ -1,0 +1,3 @@
+#!/bin/bash
+# for use on systems that have python, but no jq installed
+python -c 'import sys,json;print(json.dumps(json.load(sys.stdin),indent=4,sort_keys=True));'
