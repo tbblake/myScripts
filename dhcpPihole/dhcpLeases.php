@@ -83,7 +83,6 @@ if(array_key_exists("macAddress",$_GET)) {
 	$macAddress=False;
 }
 
-//print($macAddress);
 $dateFormat="m/d/y h:i:sa";
 $humanFormats=[0,1]; // html and text formats are for human consumption
 
