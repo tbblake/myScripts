@@ -21,6 +21,7 @@
 // jsonTable - output json table (deprecated)
 
 $leaseFile="/etc/pihole/dhcp.leases";
+
 if(!is_readable($leaseFile)) {
 	print("Can't read $leaseFile");
 	exit(1);
@@ -75,6 +76,14 @@ if(array_key_exists("sortOrder",$_GET)) {
 } else {
 	$sortOrderParam=0;
 }
+
+if(array_key_exists("macAddress",$_GET)) {
+	$macAddress=$_GET["macAddress"];
+} else {
+	$macAddress=False;
+}
+
+//print($macAddress);
 $dateFormat="m/d/y h:i:sa";
 $humanFormats=[0,1]; // html and text formats are for human consumption
 
@@ -100,7 +109,9 @@ if(isset($fmt)) { // we have a format set, otherwise print the outer HTML
 		if(in_array($fmt,$humanFormats)) { // human readable formats, column 0 should be human readable
 			$lease[0]=date($dateFormat,$lease[0]);
 		}
-		array_push($leases,$lease);
+		if(!$macAddress || $macAddress == $lease[1]) {
+			array_push($leases,$lease);
+		}
 	}
 
 	switch($sortOrderParam) {
