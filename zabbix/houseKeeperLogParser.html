@@ -18,12 +18,14 @@
 		function parser() {
 			document.getElementById('dst').value='';
 			zVer=document.getElementById('zVer').value;
+			myRegex=logRegexes[zVer];
+			myOut=parsedOut[zVer];
+			
 			var lines=document.getElementById('src').value.split('\n');
 			document.getElementById('dst').value='';
 			for (var i=0;i<lines.length;i++) {
-				myRegex=logRegexes[zVer];
 				if (lines[i].match(myRegex)) {
-					var newString=lines[i].replace(myRegex,parsedOut[zVer]);
+					var newString=lines[i].replace(myRegex,myOut);
 					document.getElementById('dst').value+=newString+'\n';
 				}
 			}
