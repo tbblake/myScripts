@@ -6,3 +6,5 @@ A php script and lighttpd configuration to quickly view your dhcp leases [dhcpPi
 Random bash code I've used here and there [bash](bash)
 ## SQL
 Random SQL code I've used here and there [sql](sql)
+## Zabbix
+Zabbix scripts [Zabbix](zabbix)

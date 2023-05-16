@@ -1,0 +1,45 @@
+<!DOCTYPE HTML>
+<HTML>
+<HEAD>
+	<SCRIPT>
+		var logRegexes = {
+			'4.0' : myRegex=/\s+\d+:(\d{4})(\d{2})(\d{2}):(\d{2})(\d{2})(\d{2})\.\d+ housekeeper \[deleted (\d+) hist\/trends, (\d+) items\/triggers, (\d+) events, (\d+) problems, (\d+) sessions, (\d+) alarms, (\d+) audit items in ([0-9]+([.][0-9]*)?|[.][0-9]+) sec.*/,
+			'6.0' : myRegex=/\s+\d+:(\d{4})(\d{2})(\d{2}):(\d{2})(\d{2})(\d{2})\.\d+ housekeeper \[deleted (\d+) hist\/trends, (\d+) items\/triggers, (\d+) events, (\d+) problems, (\d+) sessions, (\d+) alarms, (\d+) audit, (\d+) records in ([0-9]+([.][0-9]*)?|[.][0-9]+) sec.*/
+		}
+		var parsedOut = {
+			'4.0' : '$2\/$3\/$1\t$4:$5:$6\t$7\t$8\t$9\t$10\t$11\t$12\t$13\t$14',
+			'6.0' : '$2\/$3\/$1\t$4:$5:$6\t$7\t$8\t$9\t$10\t$11\t$12\t$13\t$14\t$15'
+		}
+		function resetAll() {
+			document.getElementById('src').value='';
+			document.getElementById('dst').value='';
+			document.getElementById('zVer').value='4.0';
+		}
+		function parser() {
+			document.getElementById('dst').value='';
+			zVer=document.getElementById('zVer').value;
+			var lines=document.getElementById('src').value.split('\n');
+			document.getElementById('dst').value='';
+			for (var i=0;i<lines.length;i++) {
+				myRegex=logRegexes[zVer];
+				if (lines[i].match(myRegex)) {
+					var newString=lines[i].replace(myRegex,parsedOut[zVer]);
+					document.getElementById('dst').value+=newString+'\n';
+				}
+			}
+		}
+	</SCRIPT>
+	<TITLE>Zabbix Housekeeper Log Parser</TITLE>
+</HEAD>
+<BODY>
+	Zabbix version: <SELECT NAME='zVer' id='zVer' onchange='parser()'>
+		<OPTION VALUE='4.0'>4.0</OPTION>
+		<OPTION VALUE='6.0'>6.0</OPTION>
+		<OPTION VALUE='6.0'>6.4</OPTION>
+	</SELECT>&nbsp;
+	<BUTTON onclick='resetAll()'>Reset</BUTTON><BR><BR>
+	<TEXTAREA id='src' rows=4 cols=120 oninput='parser()'></TEXTAREA>
+	<BR>
+	<TEXTAREA id='dst' rows=20 cols=120></TEXTAREA>
+</BODY>
+</HTML>
