@@ -175,8 +175,8 @@ if(isset($fmt)) { // we have a format set, otherwise print the outer HTML
 			print("<th onclick='sortTable(1,0)'>MAC</th>");
 			print("<th onclick='sortTable(5,1)'>IP</th>");
 			print("<th onclick='sortTable(3,0)'>Name</th>");
-			print("<th style='display:none;'>hiddenExpiry</th>");
-			print("<th style='display:none;'>hiddenIP</th>");
+			print("<th class='hidden'>hiddenExpires</th>");
+			print("<th class='hidden'>hiddenIP</th>");
 			print("</tr>\n");
 			foreach ($leases as $lease) {
 				print("<tr>");
@@ -184,8 +184,8 @@ if(isset($fmt)) { // we have a format set, otherwise print the outer HTML
 				print("<td>".$lease[1]."</td>");
 				print("<td>".$lease[2]."</td>");
 				print("<td>".$lease[3]."</td>");
-				print("<td style='display:none;'>".$lease[4]."</td>");
-				print("<td style='display:none;'>".$lease[5]."</td>");
+				print("<td class='hidden'>".$lease[4]."</td>");
+				print("<td class='hidden'>".$lease[5]."</td>");
 				print("</tr>\n");
 			}
 			print("</table>\n");
@@ -349,31 +349,29 @@ if(isset($fmt)) { // we have a format set, otherwise print the outer HTML
 		updateStatus();
 	</script>
 	<style>
-		#dhcp {
+		table, th, td {
 			font-family: monospace;
 			border-collapse: collapse;
-		}
-
-		#dhcp td, #dhcp th {
 			border: 0px;
-			padding: 0 5px;
+			padding: 0px 5px;
+			text-align: left;
 		}
-
-		#dhcp tr:nth-child(even){background-color: #f2f2f2;}
-
-		#dhcp tr:hover {background-color: #ddd;}
 
 		#dhcp th {
-			text-align: left;
 			background-color: #444444;
 			color: white;
 		}
 
-		#date {
-			font-family: monospace;
-			border-collapse: collapse;
-			border: 0px;
-			padding: 0 5px;
+		#dhcp tr:nth-child(even) {
+			background-color: #f2f2f2;
+		}
+
+		#dhcp tr:hover {
+			background-color: #ddd;
+		}
+		
+		.hidden {
+			display: none;
 		}
 	</style>
 	</head>
