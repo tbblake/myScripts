@@ -29,6 +29,11 @@
 					document.getElementById('dst').value+=newString+'\n';
 				}
 			}
+			document.getElementById('dst').focus();
+			document.getElementById('dst').select();
+			document.getElementById('dst').setSelectionRange(0, 99999);
+			navigator.clipboard.writeText(document.getElementById('dst').value);
+			alert("Copied");
 		}
 	</SCRIPT>
 	<TITLE>Zabbix Housekeeper Log Parser</TITLE>
