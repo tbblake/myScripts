@@ -1,1 +1,3 @@
-marked.min.js
+marked.min.js*
+downloadJS.sh
+.gitignore
