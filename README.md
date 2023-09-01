@@ -9,4 +9,4 @@ Random SQL code I've used here and there [sql](sql)
 ## Zabbix
 Zabbix scripts [Zabbix](zabbix)
 # markdown
-a barebones [markdownConvert](markdownConvert) to html converter
+a barebones [markdown](markdownConvert) to html converter
