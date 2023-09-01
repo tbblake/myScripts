@@ -14,11 +14,39 @@
 			table.fixed {
 				table-layout: fixed;
 			}
+			button {
+				margin: 5px;
+			}
+			.hidden {
+				visibility: hidden;
+				opacity: 0;
+				transition: visibility 0s 2s, opacity 2s linear;
+			}
 		</style>
 		<script>
 			function parser() {
 				document.getElementById('content').innerHTML = marked.parse(document.getElementById('src').value);
 				document.getElementById('dst').value = marked.parse(document.getElementById('src').value);
+				document.getElementById('copiedText').innerHTML='';
+
+			}
+			function resetAll() {
+				document.getElementById('src').value='';
+				document.getElementById('dst').value='';
+				document.getElementById('content').innerHTML='';
+			}
+
+			function copyDst() {
+				document.getElementById('dst').focus();
+				document.getElementById('dst').select();
+				document.getElementById('dst').setSelectionRange(0, 99999);
+				navigator.clipboard.writeText(document.getElementById('dst').value);
+				document.getElementById('dst').setSelectionRange(0, 0);
+				document.getElementById('copiedText').innerHTML='Copied!';
+			}
+
+			function clearCopiedText() {
+				document.getElementById('copiedText').innerHTML='';
 			}
 		</script>
 		<!-- 
@@ -28,15 +56,16 @@
 		-->
 		<script src="marked.min.js"></script>
 	</head>
+	<title>Marked markdown converter</title>
 	<body>
 		<a href="https://raw.githubusercontent.com/markedjs/marked/master/marked.min.js">Download marked.min.js</a>
 		<TABLE class="fixed"><TR><TD valign=top>
 			<TR>
 				<TD valign=top>
-					Markdown:<BR>
+					Markdown: <BUTTON onclick='resetAll()'>Clear</BUTTON><BR>
 					<TEXTAREA id='src' rows=20 cols=60 oninput='parser()'></TEXTAREA><BR>
-					HTML:<BR>
-					<TEXTAREA id='dst' rows=20 cols=60></TEXTAREA>
+					HTML: <BUTTON onclick='copyDst()' onmouseout='clearCopiedText()'>Copy</BUTTON> <SPAN id='copiedText'></SPAN><BR>
+					<TEXTAREA id='dst' rows=20 cols=60 readonly></TEXTAREA>
 				</TD>
 				<TD valign=top>
 					<div class="scrollable" id="content"></div>
