@@ -48,38 +48,64 @@ Markdown converter based on the marked javascript library
 			};
 
 			function parser() {
-				document.getElementById('content').innerHTML = marked.parse(document.getElementById('src').value);
-				document.getElementById('dst').value = marked.parse(document.getElementById('src').value);
-				document.getElementById('copiedText').innerHTML='';
+				document.getElementById('content').innerHTML = marked.parse(document.getElementById('mdtext').value);
+				document.getElementById('htmltext').value = marked.parse(document.getElementById('mdtext').value);
+				document.getElementById('copiedHTMLText').innerHTML='';
 			}
 
 			function resetAll() {
-				document.getElementById('src').value='';
-				document.getElementById('dst').value='';
+				document.getElementById('mdtext').value='';
+				document.getElementById('htmltext').value='';
 				document.getElementById('content').innerHTML='';
-				document.getElementById('copiedText').innerHTML='';
+				document.getElementById('copiedHTMLText').innerHTML='';
 				document.getElementById('htmlFileNameText').innerHTML='';
 				document.getElementById('mdFileNameText').innerHTML='';
+
+				mdHandle=undefined;
+				delete(mdHandle);
+				mdData=undefined;
+				delete(mdData);
+				mdText=undefined;
+				delete(mdText);
+				htmlHandle=undefined;
+				delete(htmlHandle);
+				htmlData=undefined;
+				delete(htmlData);
+				htmlText=undefined;
+				delete(htmlText);
 			}
 
 			function copyDst() {
-				document.getElementById('dst').focus();
-				document.getElementById('dst').select();
-				document.getElementById('dst').setSelectionRange(0, 99999);
-				navigator.clipboard.writeText(document.getElementById('dst').value);
-				document.getElementById('dst').setSelectionRange(0, 0);
-				document.getElementById('copiedText').innerHTML='Copied!';
+				document.getElementById('htmltext').focus();
+				document.getElementById('htmltext').select();
+				document.getElementById('htmltext').setSelectionRange(0, 99999);
+				navigator.clipboard.writeText(document.getElementById('htmltext').value);
+				document.getElementById('htmltext').setSelectionRange(0, 0);
+				document.getElementById('copiedHTMLText').innerHTML='Copied!';
 			}
 
-			function clearCopiedText() {
-				document.getElementById('copiedText').innerHTML='';
+			function copySrc() {
+				document.getElementById('mdtext').focus();
+				document.getElementById('mdtext').select();
+				document.getElementById('mdtext').setSelectionRange(0, 99999);
+				navigator.clipboard.writeText(document.getElementById('mdtext').value);
+				document.getElementById('mdtext').setSelectionRange(0, 0);
+				document.getElementById('copiedMDText').innerHTML='Copied!';
+			}
+
+			function clearCopiedHTMLText() {
+				document.getElementById('copiedHTMLText').innerHTML='';
+			}
+
+			function clearCopiedMDText() {
+				document.getElementById('copiedMDText').innerHTML='';
 			}
 
 			async function loadmd() {
 				[mdHandle] = await window.showOpenFilePicker();
 				let mdData = await mdHandle.getFile();
 				let mdText = await mdData.text();
-				document.getElementById('src').value=mdText;
+				document.getElementById('mdtext').value=mdText;
 				parser();
 				document.getElementById('mdFileNameText').innerHTML=mdData['name'];
 			}
@@ -88,7 +114,7 @@ Markdown converter based on the marked javascript library
 				if (mdHandle instanceof FileSystemFileHandle) {
 					let stream = await mdHandle.createWritable();
 					let mdData = await mdHandle.getFile();
-					await stream.write(document.getElementById('src').value);
+					await stream.write(document.getElementById('mdtext').value);
 					await stream.close();
 					document.getElementById('mdFileNameText').innerHTML=mdData['name'];
 				} else {
@@ -105,7 +131,7 @@ Markdown converter based on the marked javascript library
 				if (htmlHandle instanceof FileSystemFileHandle) {
 					let stream = await htmlHandle.createWritable();
 					let htmlData = await htmlHandle.getFile();
-					await stream.write(document.getElementById('dst').value);
+					await stream.write(document.getElementById('htmltext').value);
 					await stream.close();
 					document.getElementById('htmlFileNameText').innerHTML=htmlData['name'];
 				} else {
@@ -137,14 +163,15 @@ Markdown converter based on the marked javascript library
 					<BUTTON onclick='savemd()'>Save</BUTTON>
 					<BUTTON onclick='saveasmd()'>Save As</BUTTON>
 					<BUTTON onclick='loadmd()'>Load</BUTTON>
-					<BUTTON onclick='resetAll()'>Clear</BUTTON><BR>
+					<BUTTON onclick='resetAll()'>Clear</BUTTON>
+					<BUTTON onclick='copySrc()' onmouseout='clearCopiedMDText()'>Copy</BUTTON><SPAN id='copiedMDText'></SPAN><BR>
 					<SPAN id='mdFileNameText'></SPAN><BR>
-					<TEXTAREA id='src' rows=20 cols=60 oninput='parser()'></TEXTAREA><BR>
+					<TEXTAREA id='mdtext' rows=20 cols=60 oninput='parser()'></TEXTAREA><BR>
 					HTML: <BUTTON onclick='savehtml()'>Save</BUTTON>
 					<BUTTON onclick='saveashtml()'>Save As</BUTTON>
-					<BUTTON onclick='copyDst()' onmouseout='clearCopiedText()'>Copy</BUTTON><SPAN id='copiedText'></SPAN><BR>
+					<BUTTON onclick='copyDst()' onmouseout='clearCopiedHTMLText()'>Copy</BUTTON><SPAN id='copiedHTMLText'></SPAN><BR>
 					<SPAN id='htmlFileNameText'></SPAN><BR>
-					<TEXTAREA id='dst' rows=20 cols=60 readonly></TEXTAREA>
+					<TEXTAREA id='htmltext' rows=20 cols=60 readonly></TEXTAREA>
 				</TD>
 				<TD valign=top>
 					<div class="scrollable" id="content"></div>
