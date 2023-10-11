@@ -19,13 +19,11 @@ Markdown converter based on the marked javascript library
 				padding: 0;
 				overflow: auto;
 			}
-
-			table.fixed {
-				table-layout: fixed;
-			}
-
 			button {
 				margin: 5px;
+			}
+			.outerdiv {
+				display: flex;
 			}
 		</style>
 		<script>
@@ -158,9 +156,8 @@ Markdown converter based on the marked javascript library
 	</head>
 	<body>
 		Download: <a href="https://cdn.jsdelivr.net/npm/marked/marked.min.js" title="right click, save link as">marked.min.js</a>&nbsp;
-		<TABLE class="fixed"><TR><TD valign=top>
-			<TR>
-				<TD valign=top>
+		<div class="outerdiv">
+			<div>
 					Markdown: 
 					<BUTTON onclick='savemd()'>Save</BUTTON>
 					<BUTTON onclick='saveasmd()'>Save As</BUTTON>
@@ -174,11 +171,8 @@ Markdown converter based on the marked javascript library
 					<BUTTON onclick='copyDst()' onmouseout='clearCopiedHTMLText()'>Copy</BUTTON><SPAN id='copiedHTMLText'></SPAN><BR>
 					<SPAN id='htmlFileNameText'></SPAN><BR>
 					<TEXTAREA id='htmltext' rows=20 cols=60 readonly></TEXTAREA>
-				</TD>
-				<TD valign=top>
-					<div class="scrollable" id="content"></div>
-				</TD>
-			</TR>
-		</TABLE>
+			</div>&nbsp;&nbsp;&nbsp;
+			<div class="scrollable" id="content"></div>
+		</div>
 	</body>
 </html>
