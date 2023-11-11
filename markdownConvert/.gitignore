@@ -1,4 +1,3 @@
 marked.min.js*
-downloadJS.sh
-versions.sh
+*.sh
 .gitignore
