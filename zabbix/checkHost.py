@@ -1,5 +1,3 @@
-#!/root/scripts/venv/bin/python3
-
 # pip3 install \
 #     requests==2.27.1 \
 #     python-dotenv==0.20.0 \
