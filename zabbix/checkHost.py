@@ -61,7 +61,6 @@ def main():
 	parser.add_argument('-k',dest='items',action='append',default=[],help='Item key(s) to submit tasks for, multiple allowed')
 	parser.add_argument('-l',dest='listall',action='store_true',default=False,help='List all available hosts and items, or restrict to hosts requested')
 	parser.add_argument('-d',dest='dryrun',action='store_true',default=False,help='Dry run (don\'t send request to Zabbix)')
-	parser.add_argument('-c',dest='nocolor',action='store_true',default=False,help='Disable color output')
 
 	# no args?  print help
 	if len(sys.argv)==1:
@@ -73,10 +72,6 @@ def main():
 	reqItems=args.items
 	dryRun=args.dryrun
 	listAll=args.listall
-	noColor=args.nocolor
-
-	if noColor:
-		os.environ['NO_COLOR']=''
 
 	# Using the dotenv module, looking for authID and apiURL options within .zbx.env in the script directory.
 	# e.g.
