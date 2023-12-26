@@ -220,6 +220,7 @@ def validateItem(*,host,item,foundItems,taskItems): # item key to look for, all 
 	hostReturnStr=f'[{hostNameColor}]{host}[/{hostNameColor}] - '
 	foundItemsByKey={it["key_"]:it for it in foundItems} # all keys on the host, indexed by key_
 	foundItemsById={it["itemid"]:it for it in foundItems}# all keys on the host, indexed by itemid
+	printItem=escape(item)
 	
 	if item not in foundItemsByKey.keys(): # item does not exist in this host, return False
 		return False,f'{hostReturnStr}item [{itemKeyColor}]{printItem}[/{itemKeyColor}] [{errColor}]does not exist[/{errColor}]'
@@ -231,7 +232,6 @@ def validateItem(*,host,item,foundItems,taskItems): # item key to look for, all 
 	itemStatus=foundItemsByKey[item]["status"]
 	itemType=foundItemsByKey[item]["type"]
 	itemTypeText=itemTypes[int(itemType)]
-	printItem=escape(item)
 	if masterItemId != "0": # item is a dependent item, let's get some master item details
 		printMasterItemKey=escape(foundItemsById[masterItemId]["key_"])
 		masterItemOrLLDType=itemOrLLD(foundItemsById[masterItemId])
