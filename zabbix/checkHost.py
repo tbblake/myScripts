@@ -1,3 +1,5 @@
+#!/root/scripts/venv/bin/python3
+
 # pip3 install \
 #     requests==2.27.1 \
 #     python-dotenv==0.20.0 \
@@ -15,32 +17,32 @@ from rich.markup import escape as escape
 
 # https://www.zabbix.com/documentation/6.4/en/manual/api/reference/item/object
 # https://www.zabbix.com/documentation/6.4/en/manual/api/reference/task/create
-allowedItemTypes=[0,3,5,10,11,12,13,14,15,16,18,19,20]
+allowedItemTypes=["0","3","5","10","11","12","13","14","15","16","18","19","20"]
 
-itemTypes=[
-	"Zabbix agent",          #  0 - Allowed
-	"",                      #  1 - UNKNOWN
-	"Zabbix trapper",        #  2 - Not allowed
-	"Simple check",          #  3 - Allowed
-	"",                      #  4 - UNKNOWN
-	"Zabbix internal",       #  5 - Allowed
-	"",                      #  6 - UNKNOWN
-	"Zabbix agent (active)", #  7 - Not allowed
-	"",                      #  8 - UNKNOWN
-	"Web item",              #  9 - Not allowed
-	"External check",        # 10 - Allowed
-	"Database monitor",      # 11 - Allowed
-	"IPMI agent",            # 12 - Allowed
-	"SSH agent",             # 13 - Allowed
-	"TELNET agent",          # 14 - Allowed
-	"Calculated",            # 15 - Allowed
-	"JMX agent",             # 16 - Allowed
-	"SNMP trap",             # 17 - Not allowed
-	"Dependent item",        # 18 - Allowed
-	"HTTP agent",            # 19 - Allowed
-	"SNMP agent",            # 20 - Allowed
-	"Script"                 # 21 - Not allowed
-]
+itemTypes={
+	"0": "Zabbix agent",           #  0 - Allowed
+	"1": "",                       #  1 - UNKNOWN
+	"2": "Zabbix trapper",         #  2 - Not allowed
+	"3": "Simple check",           #  3 - Allowed
+	"4": "",                       #  4 - UNKNOWN
+	"5": "Zabbix internal",        #  5 - Allowed
+	"6": "",                       #  6 - UNKNOWN
+	"7": "Zabbix agent (active)",  #  7 - Not allowed
+	"8": "",                       #  8 - UNKNOWN
+	"9": "Web item",               #  9 - Not allowed
+	"10": "External check",        # 10 - Allowed
+	"11": "Database monitor",      # 11 - Allowed
+	"12": "IPMI agent",            # 12 - Allowed
+	"13": "SSH agent",             # 13 - Allowed
+	"14": "TELNET agent",          # 14 - Allowed
+	"15": "Calculated",            # 15 - Allowed
+	"16": "JMX agent",             # 16 - Allowed
+	"17": "SNMP trap",             # 17 - Not allowed
+	"18": "Dependent item",        # 18 - Allowed
+	"19": "HTTP agent",            # 19 - Allowed
+	"20": "SNMP agent",            # 20 - Allowed
+	"21": "Script"                 # 21 - Not allowed
+}
 
 # https://rich.readthedocs.io/en/stable/appendix/colors.html
 itemKeyColor="cyan"
@@ -104,7 +106,7 @@ def main():
 			for item in host['items']+host['discoveries']:
 				key=escape(item["key_"])
 				name=escape(item["name"])
-				type=itemTypes[int(item["type"])]
+				type=itemTypes[item["type"]]
 				if host["status"] == "0":
 					hostName=f"[{hostNameColor}]{hostName}[/{hostNameColor}]"
 				else:
@@ -231,12 +233,12 @@ def validateItem(*,host,item,foundItems,taskItems): # item key to look for, all 
 	masterItemId=foundItemsByKey[item]["master_itemid"]	
 	itemStatus=foundItemsByKey[item]["status"]
 	itemType=foundItemsByKey[item]["type"]
-	itemTypeText=itemTypes[int(itemType)]
+	itemTypeText=itemTypes[itemType]
 	if masterItemId != "0": # item is a dependent item, let's get some master item details
 		printMasterItemKey=escape(foundItemsById[masterItemId]["key_"])
 		masterItemOrLLDType=itemOrLLD(foundItemsById[masterItemId])
 		masterItemType=foundItemsById[masterItemId]["type"]
-		masterItemTypeText=itemTypes[int(masterItemType)]
+		masterItemTypeText=itemTypes[masterItemType]
 		masterItemStatus=foundItemsById[masterItemId]["status"] # NEED TO ADD A CHECK FOR THIS BELOW!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 	# item exists on this host, but is not enabled, return False
@@ -244,7 +246,7 @@ def validateItem(*,host,item,foundItems,taskItems): # item key to look for, all 
 		return False,f'{hostReturnStr}{itemOrLLDType} [{itemKeyColor}]{printItem}[/{itemKeyColor}] [{errColor}]not submitted (item disabled)[/{errColor}]'
 	
 	# item is enabled, but item type is not allowed, return False
-	if int(itemType) not in allowedItemTypes: # item type not allowed
+	if itemType not in allowedItemTypes: # item type not allowed
 		return False,f'{hostReturnStr}{itemOrLLDType} [{itemKeyColor}]{printItem}[/{itemKeyColor}] [{errColor}]not submitted (type {itemTypeText})[/{errColor}]'
 
 	# item type allowed
@@ -253,7 +255,7 @@ def validateItem(*,host,item,foundItems,taskItems): # item key to look for, all 
 		if masterItemStatus != "0": # master item is not enabled
 			return False,f'{hostReturnStr}{itemOrLLDType} [{itemKeyColor}]{printItem}[/{itemKeyColor}] [{errColor}]not submitted due to master {masterItemOrLLDType} {printMasterItemKey} (master item disabled)[/{errColor}]'
 
-		if int(masterItemType) not in allowedItemTypes: # master item type not allowed, return False
+		if masterItemType not in allowedItemTypes: # master item type not allowed, return False
 			return False,f'{hostReturnStr}{itemOrLLDType} [{itemKeyColor}]{printItem}[/{itemKeyColor}] [{errColor}]not submitted due to master {masterItemOrLLDType} {printMasterItemKey} (type {masterItemTypeText})[/{errColor}]'
 
 		if masterItemId in taskItems: # master item is already in list
