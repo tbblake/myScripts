@@ -21,14 +21,14 @@ allowedItemTypes=["0","3","5","10","11","12","13","14","15","16","18","19","20"]
 
 itemTypes={
 	"0": "Zabbix agent",           #  0 - Allowed
-	"1": "",                       #  1 - UNKNOWN
+	"1": "",                       #  1 - Undefined
 	"2": "Zabbix trapper",         #  2 - Not allowed
 	"3": "Simple check",           #  3 - Allowed
-	"4": "",                       #  4 - UNKNOWN
+	"4": "",                       #  4 - Undefined
 	"5": "Zabbix internal",        #  5 - Allowed
-	"6": "",                       #  6 - UNKNOWN
+	"6": "",                       #  6 - Undefined
 	"7": "Zabbix agent (active)",  #  7 - Not allowed
-	"8": "",                       #  8 - UNKNOWN
+	"8": "",                       #  8 - Undefined
 	"9": "Web item",               #  9 - Not allowed
 	"10": "External check",        # 10 - Allowed
 	"11": "Database monitor",      # 11 - Allowed
@@ -107,6 +107,7 @@ def main():
 				key=escape(item["key_"])
 				name=escape(item["name"])
 				type=itemTypes[item["type"]]
+				itemOrLLDType=itemOrLLD(item)
 				if host["status"] == "0":
 					hostName=f"[{hostNameColor}]{hostName}[/{hostNameColor}]"
 				else:
@@ -120,7 +121,7 @@ def main():
 					name=f"[{disabledColor}]{name}[/{disabledColor}]"
 
 				# item status
-				rprint(f'{hostName} - {name} - {key} - [{itemTypeColor}]{type}[/{itemTypeColor}]')
+				rprint(f'{hostName} - {itemOrLLDType} - {name} - {key} - [{itemTypeColor}]{type}[/{itemTypeColor}]')
 		sys.exit()
 	
 	# get back a list of item IDs we can submit tasks for
