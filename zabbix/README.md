@@ -5,4 +5,7 @@ houseKeeperLogParser.html -- A javascript housekeeper log parser.  Paste your za
 
 checkHost.py -- Submit tasks for Zabbix to check one or mote items on one or more hosts
 
+problems.py -- lists problems, options to ack, add message, and close
+
 unsupportedItems.py -- lists all unsupported items
+
