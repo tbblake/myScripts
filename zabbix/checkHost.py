@@ -49,7 +49,7 @@ itemTypes={
 def main():
 	parser = argparse.ArgumentParser(
 		description='Submit tasks for zabbix processing',
-		epilog=f"example: %(prog)s -s somehost.lan -k agent.ping -k 'icmpping[,,,]'")
+		epilog=f"example: %(prog)s -s somehost.tblake.org -k agent.ping -k 'icmpping[,,,]'")
 	parser.add_argument('-s',dest='hosts',action='append',default=[],help='Host(s) to submit tasks for, one or more required, or -l option')
 	parser.add_argument('-k',dest='items',action='append',default=[],help='Item key(s) to submit tasks for, multiple allowed')
 	parser.add_argument('-l',dest='listall',action='store_true',default=False,help='List all available hosts and items, or restrict to hosts requested')
