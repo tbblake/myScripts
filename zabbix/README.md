@@ -11,6 +11,7 @@ unsupportedItems.py -- lists all unsupported items
 
 
 All .py scripts requite a .zbx.env file in the directory with the script, formatted like the below with an authID and apiURL parameter
+
 '''
 authID=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 apiURL=https://zabbix.host.com/api_jsonrpc.php
