@@ -1,7 +1,7 @@
 # Zabbix
 Scripts to use with [Zabbix](https://www.zabbix.com)
 
-houseKeeperLogParser.html -- A javascript housekeeper log parser.  Paste your zabbix_server.log in here to parse out the useful stats from the housekeeper.  Support for 4.0, 6.0, and 6.4.
+houseKeeperLogParser.html -- A javascript housekeeper log parser.  Paste your zabbix_server.log in here to parse out the useful stats from the housekeeper.  Support for 4.0, 6.0, and 6.4. (5/8/24 - appears to be broken....hrmmmm....)
 
 checkHost.py -- Submit tasks for Zabbix to check one or mote items on one or more hosts
 
