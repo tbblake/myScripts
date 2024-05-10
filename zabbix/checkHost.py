@@ -52,6 +52,7 @@ def main():
 		epilog=f"example: %(prog)s -s somehost.tblake.org -k agent.ping -k 'icmpping[,,,]'")
 	parser.add_argument('-s',dest='hosts',action='append',default=[],help='Host(s) to submit tasks for, one or more required, or -l option')
 	parser.add_argument('-k',dest='items',action='append',default=[],help='Item key(s) to submit tasks for, multiple allowed')
+	parser.add_argument('-m',dest='minimal',action='store_true',default=False,help='Combined with -l, lists just the host(s) and keys')
 	parser.add_argument('-l',dest='listall',action='store_true',default=False,help='List all available hosts and items, or restrict to hosts requested')
 	parser.add_argument('-d',dest='dryrun',action='store_true',default=False,help='Dry run (don\'t send request to Zabbix)')
 
@@ -65,6 +66,7 @@ def main():
 	reqItems=args.items
 	dryRun=args.dryrun
 	listAll=args.listall
+	minimal=args.minimal
 
 	# Using the dotenv module, looking for authID and apiURL options within .zbx.env in the script directory.
 	# e.g.
@@ -102,7 +104,10 @@ def main():
 				name=item["name"]
 				type=itemTypes[item["type"]]
 				itemOrLLDType=itemOrLLD(item)
-				print(f'{hostName} - {itemOrLLDType} - {name} - {key} - {type}')
+				if minimal:
+					print(f'{hostName},{key}')
+				else:
+					print(f'{hostName} - {itemOrLLDType} - {name} - {key} - {type}')
 		sys.exit()
 	
 	# get back a list of item IDs we can submit tasks for
