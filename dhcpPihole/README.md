@@ -24,15 +24,15 @@ Additional options can be passed to the php script in the URL for html / text / 
 * textTable - output text table (deprecated, use fmt flag)
 * jsonTable - output json table (deprecated, use fmt flag)
 
-To install, copy dhcpLeases.php to /var/www/html, 10-accesslog-dhcpLeases.conf to /etc/lighttpd/conf-enabled, then restart lighttpd.
+To install, copy dhcpLeases.php to /var/www/html, 10-dhcpLeases.conf to /etc/lighttpd/conf-enabled, then restart lighttpd.
 
 Or this:
 
 ```
 git clone https://github.com/tbblake/myScripts.git
 sudo cp myScripts/dhcpPihole/dhcpLeases.php /var/www/html/dhcpLeases.php
-sudo cp myScripts/dhcpPihole/10-accesslog-dhcpLeases.conf /etc/lighttpd/conf-enabled/10-accesslog-dhcpLeases.conf
-sudo chmod 644 /var/www/html/dhcpLeases.php /etc/lighttpd/conf-enabled/10-accesslog-dhcpLeases.conf
+sudo cp myScripts/dhcpPihole/10-dhcpLeases.conf /etc/lighttpd/conf-enabled/10-dhcpLeases.conf
+sudo chmod 644 /var/www/html/dhcpLeases.php /etc/lighttpd/conf-enabled/10-dhcpLeases.conf
 sudo systemctl restart lighttpd
 ```
 
@@ -40,8 +40,8 @@ Or this:
 
 ```
 sudo curl -sLo /var/www/html/dhcpLeases.php https://raw.githubusercontent.com/tbblake/myScripts/main/dhcpPihole/dhcpLeases.php
-sudo curl -sLo /etc/lighttpd/conf-enabled/10-accesslog-dhcpLeases.conf https://raw.githubusercontent.com/tbblake/myScripts/main/dhcpPihole/10-accesslog-dhcpLeases.conf
-sudo chmod 644 /var/www/html/dhcpLeases.php /etc/lighttpd/conf-enabled/10-accesslog-dhcpLeases.conf
+sudo curl -sLo /etc/lighttpd/conf-enabled/10-dhcpLeases.conf https://raw.githubusercontent.com/tbblake/myScripts/main/dhcpPihole/10-dhcpLeases.conf
+sudo chmod 644 /var/www/html/dhcpLeases.php /etc/lighttpd/conf-enabled/10-dhcpLeases.conf
 sudo systemctl restart lighttpd
 ```
 
