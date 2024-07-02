@@ -1,3 +1,5 @@
+# Archiving this, I'm not keeping it up to date.  Gotta think of a better way and workflow to share stuff
+
 # myScripts
 A collection of my scripts &amp; code
 ## DHCP for pihole
